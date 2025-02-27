@@ -1,0 +1,380 @@
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fey Financial Platform</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.29.0/feather.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #000000;
+      color: #ffffff;
+      overflow-x: hidden;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .container {
+      max-width: 100%;
+      margin: 0 auto;
+      padding: 80px 40px;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+    
+    .title {
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      position: relative;
+      display: inline-block;
+    }
+    
+    .title .strike {
+      position: relative;
+    }
+    
+    .title .strike::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background-color: #ffffff;
+    }
+    
+    .subtitle {
+      color: #aaaaaa;
+      font-size: 1.2rem;
+      max-width: 700px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* Cards Container */
+    .cards-container {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin: 0 auto;
+      width: 100%;
+      max-width: 1440px;
+      overflow-x: auto;
+      padding: 20px 0;
+      scroll-behavior: smooth;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+      min-height: 500px; /* Increased height */
+    }
+    
+    .cards-container::-webkit-scrollbar {
+      display: none;
+    }
+    
+    /* Card Styling */
+    .card {
+      border-radius: 16px;
+      transition: all 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+      overflow: hidden;
+      position: relative;
+      min-width: 80px;
+      max-width: 80px;
+      height: 500px; /* Increased height */
+      flex: 1;
+      cursor: pointer;
+    }
+    
+    /* Unique Radial Gradients */
+    .card:nth-child(1) { background: radial-gradient(circle at 20% 30%, rgba(100, 200, 255, 0.8), rgba(15, 15, 15, 0.9)); }
+    .card:nth-child(2) { background: radial-gradient(circle at 50% 70%, rgba(100, 255, 150, 0.8), rgba(15, 15, 15, 0.9)); }
+    .card:nth-child(3) { background: radial-gradient(circle at 80% 40%, rgba(255, 150, 100, 0.8), rgba(15, 15, 15, 0.9)); }
+    .card:nth-child(4) { background: radial-gradient(circle at 30% 60%, rgba(200, 100, 255, 0.8), rgba(15, 15, 15, 0.9)); }
+    .card:nth-child(5) { background: radial-gradient(circle at 70% 20%, rgba(255, 220, 100, 0.8), rgba(15, 15, 15, 0.9)); }
+    .card:nth-child(6) { background: radial-gradient(circle at 40% 50%, rgba(100, 255, 220, 0.8), rgba(15, 15, 15, 0.9)); }
+    .card:nth-child(7) { background: radial-gradient(circle at 60% 80%, rgba(255, 100, 150, 0.8), rgba(15, 15, 15, 0.9)); }
+
+    .card.active {
+      min-width: 320px;
+      max-width: 320px;
+      flex: 3;
+    }
+    
+    /* Card Content */
+    .title-container {
+      position: absolute;
+      left: 20px;
+      top: 20px;
+      z-index: 5;
+    }
+    
+    .vertical-title {
+      writing-mode: vertical-lr;
+      transform: rotate(180deg);
+      font-size: 1.2rem;
+      font-weight: 600;
+      background: linear-gradient(180deg, #ffffff 30%, #aaaaaa 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      white-space: nowrap;
+    }
+    
+    .card-icon {
+      position: absolute;
+      left: 20px;
+      bottom: 15px;
+      color: rgba(255, 255, 255, 0.8);
+    }
+    
+    .card-content {
+      position: absolute;
+      left: 20px;
+      right: 20px;
+      bottom:0px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.4s ease;
+      pointer-events: none;
+    }
+    
+    .card.active .card-content {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    
+    .card-description {
+      color: #aaaaaa;
+      font-size: 1rem;
+      line-height: 1.6;
+      margin-bottom: 100px;
+    }
+    
+    .preview-btn {
+      position: absolute;
+      left: 30px; /* Positioned next to the icon */
+      bottom: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      border-radius: 8px;
+      padding: 10px 16px;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .preview-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    
+    /* Wave Element */
+    .wave-container {
+      position: relative;
+      width: 100%;
+      height: 120px;
+      overflow: hidden;
+      margin-top: 40px;
+    }
+    
+    .wave {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100px;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23111111' fill-opacity='0.8' d='M0,256L48,240C96,224,192,192,288,181.3C384,171,480,181,576,197.3C672,213,768,235,864,213.3C960,192,1056,128,1152,112C1248,96,1344,128,1392,144L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+      background-size: cover;
+      background-position: center;
+    }
+    
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+      .container {
+        padding: 60px 20px;
+      }
+      
+      .title {
+        font-size: 2.5rem;
+      }
+      
+      .cards-container {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        justify-content: flex-start;
+        padding-bottom: 20px;
+      }
+      
+      .card, .card.active {
+        min-width: 70px;
+        height: 400px; /* Adjusted height for mobile */
+      }
+      
+      .card.active {
+        min-width: 260px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1 class="title"><span class="strike">One</span> a few more things.</h1>
+      <p class="subtitle">
+        There's even more to discover. Fey brings you a collection of advanced tools designed to refine and elevate your workflow.
+      </p>
+    </div>
+    
+    <div class="cards-container">
+      <!-- Card 1: Live Pricing -->
+      <div class="card" data-feature="live-pricing">
+        <div class="title-container">
+          <h3 class="vertical-title">Live Pricing</h3>
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-activity card-icon"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+        <div class="card-content">
+          <p class="card-description">
+            Experience truly live pricing with Fey. Unlike other tools, there are no delays—get instant, real-time quotes every time.
+          </p>
+          <button class="preview-btn">
+            <span>Preview live pricing</span>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Card 2: Analyst estimates -->
+      <div class="card" data-feature="analyst-estimates">
+        <div class="title-container">
+          <h3 class="vertical-title">Analyst estimates</h3>
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart-2 card-icon"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+        <div class="card-content">
+          <p class="card-description">
+            Dive into comprehensive analyst estimates. Compare historical revenue, multiples, and ratings—all in one intuitive view.
+          </p>
+          <button class="preview-btn">
+            <span>Preview analyst estimates</span>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Card 3: Company financials -->
+      <div class="card" data-feature="company-financials">
+        <div class="title-container">
+          <h3 class="vertical-title">Company financials</h3>
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text card-icon"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        <div class="card-content">
+          <p class="card-description">
+            Unlock the full picture with Fey. Access key stats, income statements, balance sheets, cash flow, and more at your fingertips.
+          </p>
+          <button class="preview-btn">
+            <span>Preview company financials</span>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Card 4: Peer analysis -->
+      <div class="card" data-feature="peer-analysis">
+        <div class="title-container">
+          <h3 class="vertical-title">Peer analysis</h3>
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-grid card-icon"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+        <div class="card-content">
+          <p class="card-description">
+            Compare and conquer with Fey's Peer Analysis. Evaluate stocks, spot trends, and benchmark against industry standards.
+          </p>
+          <button class="preview-btn">
+            <span>Preview peer analysis</span>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Card 5: Historical earnings -->
+      <div class="card" data-feature="historical-earnings">
+        <div class="title-container">
+          <h3 class="vertical-title">Historical earnings</h3>
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trending-up card-icon"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+        <div class="card-content">
+          <p class="card-description">
+            Uncover trends with comprehensive historical earnings data. Track past EPS and performance to support future strategies.
+          </p>
+          <button class="preview-btn">
+            <span>Preview historical earnings</span>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Card 6: Insider transactions -->
+      <div class="card" data-feature="insider-transactions">
+        <div class="title-container">
+          <h3 class="vertical-title">Insider transactions</h3>
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-refresh-cw card-icon"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+        <div class="card-content">
+          <p class="card-description">
+            Get the inside scoop with Insider Transactions. Monitor executive moves and understand company sentiment.
+          </p>
+          <button class="preview-btn">
+            <span>Preview insider transactions</span>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Card 7: Email updates -->
+      <div class="card" data-feature="email-updates">
+        <div class="title-container">
+          <h3 class="vertical-title">Email updates</h3>
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-mail card-icon"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+        <div class="card-content">
+          <p class="card-description">
+            Busy schedule? Email Updates bring your watchlist summaries directly to you every Monday morning. Stay informed effortlessly.
+          </p>
+          <button class="preview-btn">
+            <span>Preview email updates</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="wave-container">
+      <div class="wave"></div>
+    </div>
+  </div>
+
+  <script>
+    // Initialize Feather icons
+    document.addEventListener('DOMContentLoaded', () => {
+      feather.replace();
+      
+      const cards = document.querySelectorAll('.card');
+      const cardsContainer = document.querySelector('.cards-container');
+      
+      cards.forEach(card => {
+        card.addEventListener('mouseenter', () => {
+          // Remove active class from all cards
+          cards.forEach(c => c.classList.remove('active'));
+          
+          // Add active class to current card
+          card.classList.add('active');
+        });
+      });
+      
+      // Make sure all cards are collapsed by default
+      cardsContainer.addEventListener('mouseleave', () => {
+        cards.forEach(c => c.classList.remove('active'));
+      });
+    });
+  </script>
+
+</body></html>
